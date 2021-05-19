@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+
+<hmtl>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"
+    />
+
+    <title>Projet 7</title>
+  </head>
+
+  <body>
+    <div class="container-fluid">
+      <div class="columns is-centered is-mobile">
+        <div class="column box is-11 my-6" id="full-container">
+          <div class="columns is-centered">
+            <input
+              class="
+                input
+                column
+                mt-4
+                is-offset-5-desktop
+                is-4
+                is-offset-2-tablet
+                is-offset-1-mobile
+                is-10-mobile
+              "
+              id="search-input"
+              type="text"
+              placeholder="Find a restaurant"
+            />
+            <div
+              class="
+                column
+                mt-1
+                is-offset-1-desktop
+                is-offset-0-tablet
+                is-9-tablet
+                is-offset-2-mobile
+              "
+            >
+              <a class="button is-primary" id="addRestaurant">
+                <strong>Ajoutez un restaurant</strong>
+              </a>
+              <a class="button is-dark" id="addComment">
+                <strong>Ajoutez un commentaire</strong></a
+              >
+            </div>
+          </div>
+
+          <div class="columns is-centered">
+            <div class="column is-5 my-3 box" id="addRestaurantInfos">
+              <div class="card-content">
+                <p class="title"></p>
+                <div class="field">
+                  <label class="label">Nom du restaurant</label>
+                  <div class="control">
+                    <input class="input" id="restaurantValue" type="text" />
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label">Commentaire</label>
+                  <div class="control">
+                    <textarea
+                      class="input"
+                      id="commentValue"
+                      type="text"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+              <button class="button is-primary ml-5" id="addButtonRT">
+                Ajouter
+              </button>
+            </div>
+          </div>
+
+          <div class="columns is-centered">
+            <div
+              class="column card is-10 is-offset-1-mobile is-10-mobile my-5"
+              id="map"
+            ></div>
+          </div>
+          <div class="columns is-centered">
+            <div class="column is-6 is-offset-1-mobile is-10-mobile my-4">
+              <div class="columns is-centered box" id="restaurants-info"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.getElementById("full-container").style.backgroundColor =
+        "#96A992";
+
+      document.getElementById("map").style.height = "55vh";
+      document.getElementById("map").style.border = "1px outset white";
+
+      const searchBox = document.getElementById("search-input");
+
+      const restaurantInputBox = document.getElementById("addRestaurantInfos");
+
+      restaurantInputBox.style.display = "none";
+
+      const restaurantInfoBox = document.getElementById("restaurants-info");
+      restaurantInfoBox.style.flexWrap = "wrap";
+
+      let restaurants = [];
+      let randomReviews = [
+        "The photos of the food were appetizing and palpable, but didn't live up to the hype.",
+        "After my meal, I was knocked into a food coma. The waitress did an excellent job.",
+        "This place had a lot of heart. The food is simply to die for. The decor was unique and incredible. ",
+        "There were a lot of interesting decorations on the walls. The whole place was just dirty. Meh.",
+        "The food was flavorful, savory, and succulent.",
+      ];
+
+      class restaurant {
+        constructor(name, photoUrl, reviews) {
+          this.name = name;
+          this.photoUrl = photoUrl;
+          this.reviews = reviews;
+        }
+      }
+
+      function addRestaurant(name, comment) {
+        let restaurantBox = document.createElement("div");
+        restaurantBox.className = "column box is-5 is-narrow-mobile";
+
+        let restaurantName = document.createElement("p");
+        restaurantName.innerHTML = name;
+
+        let imagesUrls = [
+          "./IMGs/image_1.jpg",
+          "./IMGs/image_2.jpg",
+          "./IMGs/image_3.jpg",
+          "./IMGs/image_4.jpg",
+          "./IMGs/image_5.jpg",
+          "./IMGs/image_6.jpg",
+          "./IMGs/image_7.jpg",
+        ];
+
+        let randomImage =
+          imagesUrls[Math.floor(Math.random() * imagesUrls.length)];
+
+        let restaurantPhoto = document.createElement("img");
+        restaurantPhoto.className = "py-3";
+        restaurantPhoto.setAttribute("src", randomImage);
+
+        let restaurantComment = document.createElement("li");
+        restaurantComment.innerHTML = comment;
+
+        let restaurantCommentsList = document.createElement("ul");
+
+        let reviews = [];
+
+        let review = {
+          stars: "",
+          comment: comment,
+        };
+
+        reviews.push(review);
+        restaurants.push(new restaurant(name, randomImage, reviews));
+
+        restaurantCommentsList.append(restaurantComment);
+        restaurantBox.append(
+          restaurantName,
+          restaurantPhoto,
+          restaurantCommentsList
+        );
+        restaurantInfoBox.append(restaurantBox);
+      }
+
+      function addComment(restaurants) {
+        for (let i of restaurants) {
+          i.addEventListener("click", () => {
+            let commentComponent = document.createElement("div");
+            commentComponent.className = "box is-8";
+
+            let inputText = document.createElement("input");
+            let sendInput = document.createElement("button");
+
+            commentComponent.append(inputText, sendInput);
+
+            i.append(commentComponent);
+
+            sendInput.addEventListener("click", () => {
+              let comment = inputText.value;
+              commentComponent.remove();
+
+              i.append(comment);
+            });
+          });
+        }
+      }
+
+      function setRatingStars(rating, ratingDOM) {
+        if (rating <= 1 || rating <= 1) {
+          ratingDOM.innerHTML = "⭐";
+        } else if (rating > 1 && rating <= 2) {
+          ratingDOM.innerHTML = "⭐⭐";
+        } else if (rating > 2 && rating <= 3) {
+          ratingDOM.innerHTML = "⭐⭐⭐";
+        } else if (rating > 3 && rating <= 4) {
+          ratingDOM.innerHTML = "⭐⭐⭐⭐";
+        } else if (rating > 4 && rating <= 5) {
+          ratingDOM.innerHTML = "⭐⭐⭐⭐⭐";
+        }
+      }
+
+      function initMap() {
+        let paris = {
+          lat: 48.864716,
+          lng: 2.349014,
+        };
+
+        function getRestaurantsInfos(risultati) {
+          for (let i of risultati) {
+            new google.maps.Marker({
+              map,
+              position: { lat: i.lat, lng: i.long },
+            });
+
+            let restaurantsBox = document.createElement("div");
+            restaurantsBox.className = "column box is-6 is-narrow-mobile";
+
+            let restaurantName = document.createElement("p");
+
+            let restaurantPhoto = document.createElement("img");
+            restaurantPhoto.className = "py-3";
+
+            let restaurantReviewList = document.createElement("ul");
+            restaurantReviewList.className = "py-3";
+
+            let reviews = [];
+
+            for (let j of i.rating) {
+              let review = {
+                stars: j.stars,
+                comment: j.comment,
+              };
+
+              reviews.push(review);
+            }
+
+            i = new restaurant(i.restaurantName, i.imageUrl, reviews);
+            restaurants.push(i);
+
+            for (let k of restaurants) {
+              restaurantName.innerHTML = k.name;
+              k.reviews.forEach((review) => {
+                let rating = document.createElement("div");
+
+                setRatingStars(review.stars, rating);
+
+                let restaurantComments = document.createElement("li");
+                restaurantComments.className = "py-2";
+                restaurantComments.innerHTML = review.comment;
+                restaurantReviewList.append(rating, restaurantComments);
+              });
+              restaurantPhoto.setAttribute("src", k.photoUrl);
+            }
+
+            restaurantsBox.append(
+              restaurantName,
+              restaurantPhoto,
+              restaurantReviewList
+            );
+            restaurantInfoBox.append(restaurantsBox);
+          }
+        }
+
+        fetch("./restaurantsInfo.json")
+          .then((response) => response.json())
+          .then((json) => getRestaurantsInfos(json));
+
+        let map = new google.maps.Map(document.getElementById("map"), {
+          center: paris,
+          zoom: 13,
+        });
+
+        const request = {
+          fields: ["place_id", "geometry", "name"],
+          placeId: "place_id",
+          componentRestrictions: { country: "fr" },
+        };
+
+        /////////////////////////////////////////////////////////////////////////////
+
+        document
+          .getElementById("addRestaurant")
+          .addEventListener("click", () => {
+            alert(
+              "Choississez l'emplacement du restaurant en cliquant sur la mappe"
+            );
+            map.addListener("click", (mapsMouseEvent) => {
+              lat = mapsMouseEvent.latLng.toJSON().lat;
+              lng = mapsMouseEvent.latLng.toJSON().lng;
+
+              restaurantInputBox.style.display = "inline";
+
+              google.maps.event.clearListeners(map, "click");
+
+              document
+                .getElementById("addButtonRT")
+                .addEventListener("click", () => {
+                  const restaurantNameValue =
+                    document.getElementById("restaurantValue").value;
+                  const commentValue =
+                    document.getElementById("commentValue").value;
+
+                  addRestaurant(restaurantNameValue, commentValue);
+
+                  new google.maps.Marker({
+                    map,
+                    position: { lat: lat, lng: lng },
+                  });
+                  alert("Le restaurant a été ajouté avec succés!");
+                  restaurantInputBox.style.display = "none";
+                });
+            });
+          });
+
+        /////////////////////////////////////////////////////////////////////////////
+
+        const autocomplete = new google.maps.places.Autocomplete(
+          searchBox,
+          request
+        );
+
+        autocomplete.addListener("place_changed", () => {
+          let place = autocomplete.getPlace();
+
+          if (!place.geometry) {
+            window.alert("Autocomplete's returned place contains no geometry");
+          }
+
+          if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+            map.setCenter(place.geometry.location);
+            map.setZoom(12);
+          }
+
+          searchBox.value = null;
+
+          while (restaurantInfoBox.firstChild) {
+            restaurantInfoBox.firstChild.remove();
+          }
+
+          restaurants = [];
+
+          const service = new google.maps.places.PlacesService(map);
+          service.getDetails(request, callback);
+
+          service.nearbySearch(
+            {
+              location: place.geometry.location,
+              radius: 5500,
+              type: ["restaurant"],
+            },
+            callback
+          );
+
+          addComment(restaurants);
+
+          function callback(results, status) {
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+              for (var i = 0; i < results.length; i++) {
+                createMarker(results[i]);
+                let reviews = [];
+                let review = {
+                  stars: results[i].rating,
+                  comment: "",
+                };
+                reviews.push(review);
+                if (results[i].photos[0] != undefined) {
+                  results[i] = new restaurant(
+                    results[i].name,
+                    results[i].photos[0].getUrl(),
+                    reviews
+                  );
+                } else {
+                  results[i] = new restaurant(results[i].name, "", reviews);
+                }
+
+                restaurants.push(results[i]);
+              }
+
+              for (let i of restaurants) {
+                let restaurantsBox = document.createElement("div");
+                restaurantsBox.className =
+                  "column box is-6 is-7-mobile is-offset-2-mobile";
+
+                let restaurantName = document.createElement("p");
+                let rating = document.createElement("div");
+
+                let restaurantReviewList = document.createElement("ul");
+
+                let restaurantPhotoBox = document.createElement("div");
+                restaurantPhotoBox.className = "column is-narrow is-10-mobile";
+                let restaurantPhoto = document.createElement("img");
+
+                restaurantName.innerHTML = i.name;
+
+                for (let j = 0; j < 2; j++) {
+                  let restaurantReviews = document.createElement("li");
+                  restaurantReviews.className = "my-3";
+                  restaurantReviews.innerHTML =
+                    randomReviews[
+                      Math.floor(Math.random() * randomReviews.length)
+                    ];
+                  restaurantReviewList.append(restaurantReviews);
+                }
+
+                i.reviews.forEach((review) => {
+                  setRatingStars(review.stars, rating);
+                });
+
+                restaurantName.innerHTML = i.name;
+
+                restaurantPhoto.setAttribute("src", i.photoUrl);
+                restaurantPhotoBox.append(restaurantPhoto);
+
+                restaurantsBox.append(
+                  restaurantName,
+                  rating,
+                  restaurantPhotoBox,
+                  restaurantReviewList
+                );
+
+                restaurantInfoBox.append(restaurantsBox);
+              }
+            }
+          }
+
+          function createMarker(places) {
+            let marker = new google.maps.Marker({
+              map: map,
+              position: places.geometry.location,
+            });
+
+            let placePhoto = places.photo;
+
+            let restaurantName = document.getElementById("name");
+            let restaurantCanvas = document.getElementById("photo");
+
+            google.maps.event.addListener(marker, "click", () => {});
+          }
+        });
+      }
+    </script>
+
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDle9VoE513n_pc2GqBkHytL6eeOtO-0p0&libraries=places&callback=initMap"
+      async
+      defer
+    ></script>
+  </body>
+</hmtl>

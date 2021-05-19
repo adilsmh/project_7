@@ -1,0 +1,39 @@
+[
+  {
+    "restaurantName": "Bronco",
+    "address": "39 Rue des Petites Ecuries, 75010 Paris",
+    "lat": 48.8737815,
+    "long": 2.3501649,
+    "imageUrl": "https://www.zuerich.com/sites/default/files/styles/1920_1080_focal_scale_crop/public/web_zuerich_kindli_restaurant_1600x900_8375.jpg?h=8abcec71&itok=OC8hF0dP",
+    "rating": [
+      {
+        "stars": 4,
+        "comment": "Un excellent restaurant, j'y reviendrai! Par contre il vaut mieux aimer la viande."
+      },
+
+      {
+        "stars": 5,
+        "comment": "Tout simplement mon restaurant préféré!"
+      }
+    ]
+  },
+
+  {
+    "restaurantName": "Babalou",
+    "address": "4 Rue Lamarck, 75018 Paris",
+    "lat": 48.8865035,
+    "long": 2.3442197,
+    "imageUrl": "https://media.gettyimages.com/photos/interior-of-a-modern-industrial-design-pub-picture-id1085224420?s=2048x2048",
+    "rating": [
+      {
+        "stars": 5,
+        "comment": "Une miniscule pizzeria délicieuse cachée à coté du Sacré choeur!"
+      },
+
+      {
+        "stars": 3,
+        "comment": "J'ai trouvé ça correct, sans plus."
+      }
+    ]
+  }
+]
